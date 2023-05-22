@@ -1,4 +1,5 @@
 const startGameBtn = document.querySelector('#start-btn');
+const restartGameBtn = document.querySelector('#restart-btn');
 const gameboardEle = document.querySelector('#gameboard');
 const playerOneInput = document.querySelector('#player1');
 const playerTwoInput = document.querySelector('#player2');
@@ -32,7 +33,11 @@ const gameboard = (() => {
     return board;
   }
 
-  return { render, update, getBoard };
+  const setBoard = (index, value) => {
+    board[index] = value;
+  }
+
+  return { render, update, getBoard, setBoard };
 })();
 
 // A Player factory
@@ -57,6 +62,13 @@ const game = (() => {
     gameboard.render();
   }
 
+  const restart = () => {
+    for (let i = 0; i < 9; i++) {
+      gameboard.setBoard(i, '');
+    }
+    gameboard.render();
+  }
+
   const handleClick = (e) => {
     // Extract the index of this square using string manipulation
     const index = parseInt(e.target.id.split('-')[1]);
@@ -69,9 +81,13 @@ const game = (() => {
     currentPlayerIndex = Number(!currentPlayerIndex);
   }
 
-  return { start, handleClick };
+  return { start, restart, handleClick };
 })();
 
 startGameBtn.addEventListener('click', () => {
   game.start(); 
+})
+
+restartGameBtn.addEventListener('click', () => {
+  game.restart();
 })
