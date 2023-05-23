@@ -66,10 +66,16 @@ const game = (() => {
     for (let i = 0; i < 9; i++) {
       gameboard.setBoard(i, '');
     }
+    currentPlayerIndex = 0;
+    gameOver = false; 
     gameboard.render();
   }
 
   const handleClick = (e) => {
+    if (gameOver) {
+      return;
+    }
+    
     // Extract the index of this square using string manipulation
     const index = parseInt(e.target.id.split('-')[1]);
 
@@ -78,7 +84,44 @@ const game = (() => {
     }
 
     gameboard.update(index, players[currentPlayerIndex].marker);
+
+    if (hasWon(gameboard.getBoard())) {
+      gameOver = true; 
+      alert(`${players[currentPlayerIndex].playerName} is the winner!`);
+    } else if (hasTied(gameboard.getBoard())) {
+      gameOver = true; 
+      alert("It's a tie!");
+    }
+
     currentPlayerIndex = Number(!currentPlayerIndex);
+  }
+
+  /* Return true iff there is a winning combo */
+  const hasWon = (board) => {
+    // Check for a winning scenario by brute force
+    const winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ]
+    for (let i = 0; i < winningCombinations.length; i++) {
+      const [a, b, c] = winningCombinations[i];
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  const hasTied = (board) => {
+    // A tie occurs when there is no winning combo and the board is full
+    return board.every(cell => cell !== '');
   }
 
   return { start, restart, handleClick };
