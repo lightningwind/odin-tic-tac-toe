@@ -17,3 +17,9 @@
 
   font-size: 4rem;
 }
+
+#msg {
+  color: rebeccapurple;
+  font-size: 2rem;
+  margin-top: 10px;
+}

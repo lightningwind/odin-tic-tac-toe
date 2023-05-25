@@ -3,7 +3,16 @@ const restartGameBtn = document.querySelector('#restart-btn');
 const gameboardEle = document.querySelector('#gameboard');
 const playerOneInput = document.querySelector('#player1');
 const playerTwoInput = document.querySelector('#player2');
+const msgEle = document.querySelector('#msg');
 
+
+const displayController = (() => {
+  const renderMessage = (msg) => {
+    msgEle.textContent = msg; 
+  }
+
+  return { renderMessage };
+})();
 
 // A gameboard module responsible for drawing the gameboard
 const gameboard = (() => {
@@ -68,6 +77,8 @@ const game = (() => {
     }
     currentPlayerIndex = 0;
     gameOver = false; 
+
+    displayController.renderMessage('');
     gameboard.render();
   }
 
@@ -75,7 +86,7 @@ const game = (() => {
     if (gameOver) {
       return;
     }
-    
+
     // Extract the index of this square using string manipulation
     const index = parseInt(e.target.id.split('-')[1]);
 
@@ -87,10 +98,10 @@ const game = (() => {
 
     if (hasWon(gameboard.getBoard())) {
       gameOver = true; 
-      alert(`${players[currentPlayerIndex].playerName} is the winner!`);
+      displayController.renderMessage(`${players[currentPlayerIndex].playerName} is the winner!`);
     } else if (hasTied(gameboard.getBoard())) {
       gameOver = true; 
-      alert("It's a tie!");
+      displayController.renderMessage("It's a tie!");
     }
 
     currentPlayerIndex = Number(!currentPlayerIndex);
